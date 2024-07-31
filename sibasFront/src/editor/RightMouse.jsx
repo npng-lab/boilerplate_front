@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import ReadDetail from './ReadDetail';
 
 const RightMouseBtnContainer = styled.div`
   position: absolute;
@@ -24,6 +25,7 @@ const MenuList = styled.ul`
 `;
 
 const RightMouse = ({ left, top, leftCoord, topCoord }) => {
+  // const [btn, setBtn] = useState('');
   //우클릭 1번 정보 확인
   //우클릭 2번 정보 수정/작성
   return (
@@ -34,19 +36,27 @@ const RightMouse = ({ left, top, leftCoord, topCoord }) => {
       topCoord={topCoord}
     >
       <MenuList>
-        <li onClick={() => {}}>정보확인</li>
-        <li onClick={() => {}}>정보작성 및 수정</li>
+        <li
+          onClick={(e) => {
+            e.preventDefault();
+            alert('했냐');
+            // setBtn('first');
+          }}
+        >
+          정보확인
+        </li>
+        <li
+          onClick={(e) => {
+            e.preventDefault();
+            alert('했냐2');
+            // setBtn('second');
+          }}
+        >
+          정보작성 및 수정
+        </li>
       </MenuList>
     </RightMouseBtnContainer>
   );
 };
 
 export default RightMouse;
-// 우클릭시 해당 위치에 메뉴 생성.
-// 다른 건물 클릭하면 원래있던거 지워지고 또 다른 위치에 생성
-// // 좌클릭이나 빈곳 클릭하면 메뉴바 지우기
-// //우클릭 이벤트 import
-// import RightMouse from './RightMouse';
-// <div>{rClick ? <RightMouse /> : ''}</div>; // 우클릭 클릭시 발동하는 기능
-// setRClick(!rClick);
-// const [rClick, setRClick] = useState(false);

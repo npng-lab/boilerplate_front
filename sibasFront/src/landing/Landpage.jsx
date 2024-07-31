@@ -21,7 +21,10 @@ function land() {
             <h1 className="title">시바스 였습니다</h1>
             <p className="description_one">Simple, free Image Segmentation</p>
             <p className="description_two">to Make HTML</p>
-            <button className="start-button">Start Segmentation</button>
+            <button className="start-button">
+              {/*  onClick={navigateToNextPage} */}
+              Start Segmentation
+            </button>
           </header>
           <div className="exSection">
             <div className="description">

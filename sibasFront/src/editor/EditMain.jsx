@@ -8,6 +8,8 @@ import FilePreview from '../FileUpload/FilePreview';
 import '../FileUpload/FileUploader.css';
 //우클릭
 import RightMouse from './RightMouse';
+//detail
+import ReadDetail from './ReadDetail';
 
 const predict = 0.645;
 const Container = styled.div`
@@ -32,7 +34,7 @@ const BackgroundImage = styled.img.attrs((props) => ({
   display: ${(props) => (props['data-selected'] === 'true' ? 'block' : 'none')};
 `;
 /* prettier-ignore */
-const OverlayImage = styled.img.attrs((props) => ({
+const OverlayImage = styled.div.attrs((props) => ({
   'data-selected': props.isSelected ? 'true' : 'false',
 }))`
   position: absolute;
@@ -82,7 +84,8 @@ const FileViewer = () => {
   const [rClick, setRClick] = useState(false);
   const [xy, setXY] = useState({ x: -1000, y: -1000 });
   const [coord, setCoord] = useState({ xCoord: -1000, yCoord: -1000 });
-
+  //건물정보용
+  const [building, setBuilding] = useState({ url: '', click: false });
   const navigate = useNavigate();
   /* 미리보기 이미지 */
   const handleFileChange = (event) => {
@@ -220,8 +223,15 @@ const FileViewer = () => {
   };
 
   return (
-    <div className="edit-container">
+    <div
+      className="edit-container"
+      onClick={() => {
+        setRClick(false);
+        setBuilding({ url: '', click: false });
+      }}
+    >
       <div className="upload-container">
+        <ReadDetail url={building.url} click={building.click} />
         <form onSubmit={handleSubmit} className="seg_form">
           {file ? (
             <div className="preview_image">
@@ -262,7 +272,6 @@ const FileViewer = () => {
                       alt={`Result ${index + 1}`}
                       style={{
                         maxWidth: '70px',
-
                         height: '70px',
                       }}
                       onClick={() => handleCheckboxChange(index)}
@@ -313,11 +322,16 @@ const FileViewer = () => {
                     alt={background.label}
                     coordinates={background.coordinates}
                     isSelected={selectedIndices.includes(background.id)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                    }}
                   />
                   {overlays.map((item) => (
                     <OverlayImage
                       key={item.id}
-                      src={item.url}
+                      style={{
+                        backgroundImage: `url(${item.url})`,
+                      }}
                       className={item.label}
                       alt={item.label}
                       coordinates={item.coordinates}
@@ -336,12 +350,14 @@ const FileViewer = () => {
                           xCoord: item.coordinates[3][1] * predict,
                           yCoord: item.coordinates[3][0] * predict,
                         });
+                        //선택한 건물저장
+                        setBuilding({ url: item.url, click: true });
+                        console.log(building);
                         console.log(xy);
                         console.log(coord);
                       }}
                     />
                   ))}
-                  //팝업창 띄우기
                   {rClick && (
                     <RightMouse
                       left={xy.x}
@@ -358,7 +374,6 @@ const FileViewer = () => {
       ) : (
         <>이미지 업로드를 진행 해주세요</>
       )}
-
       <div onClick={() => delete_folder()}>지우자</div>
     </div>
   );
