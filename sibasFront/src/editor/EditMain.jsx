@@ -6,6 +6,8 @@ import './EditMain.css';
 import MakeZip from './MakeZip';
 import FilePreview from '../FileUpload/FilePreview';
 import '../FileUpload/FileUploader.css';
+//우클릭
+import RightMouse from './RightMouse';
 
 const predict = 0.645;
 const Container = styled.div`
@@ -76,6 +78,10 @@ const FileViewer = () => {
   const [isUploadFile, setIsUploadFile] = useState(false);
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const originalRef = useRef(null);
+  //우클릭 확인용
+  const [rClick, setRClick] = useState(false);
+  const [xy, setXY] = useState({ x: -1000, y: -1000 });
+  const [coord, setCoord] = useState({ xCoord: -1000, yCoord: -1000 });
 
   const navigate = useNavigate();
   /* 미리보기 이미지 */
@@ -317,8 +323,33 @@ const FileViewer = () => {
                       coordinates={item.coordinates}
                       isSelected={selectedIndices.includes(item.id)}
                       onClick={() => handleCheckboxChange(item.id)}
+                      //우클릭
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setRClick(!rClick);
+                        setXY({
+                          x: e.nativeEvent.offsetX,
+                          y: e.nativeEvent.offsetY,
+                        });
+                        //어디클릭상태저장
+                        setCoord({
+                          xCoord: item.coordinates[3][1] * predict,
+                          yCoord: item.coordinates[3][0] * predict,
+                        });
+                        console.log(xy);
+                        console.log(coord);
+                      }}
                     />
                   ))}
+                  //팝업창 띄우기
+                  {rClick && (
+                    <RightMouse
+                      left={xy.x}
+                      top={xy.y}
+                      leftCoord={coord.xCoord}
+                      topCoord={coord.yCoord}
+                    />
+                  )}
                 </Container>
               )}
             </div>
